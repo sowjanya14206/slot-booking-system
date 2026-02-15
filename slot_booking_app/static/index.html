@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Booking App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1><i class="fa-regular fa-calendar-check"></i> Slot Booking System</h1>
+            <p>Select a time slot below to book your appointment.</p>
+        </header>
+
+        <main>
+            <section class="slot-section">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-check-circle"></i> Available Slots</h2>
+                    <span class="badge badge-success">Open</span>
+                </div>
+                <div id="available-slots-container" class="slots-grid">
+                    <!-- Available slots loaded here -->
+                    <div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn btn-outline" onclick="changePage('available', -1)">Previous</button>
+                    <span id="available-page-num">Page 1</span>
+                    <button class="btn btn-outline" onclick="changePage('available', 1)">Next</button>
+                </div>
+            </section>
+
+            <section class="slot-section">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-ban"></i> Booked Slots</h2>
+                    <span class="badge badge-secondary">Unavailable</span>
+                </div>
+                <div id="booked-slots-container" class="slots-grid">
+                    <!-- Booked slots loaded here -->
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn btn-outline" onclick="changePage('booked', -1)">Previous</button>
+                    <span id="booked-page-num">Page 1</span>
+                    <button class="btn btn-outline" onclick="changePage('booked', 1)">Next</button>
+                </div>
+            </section>
+
+            <section class="admin-panel">
+                <h2><i class="fa-solid fa-shield-halved"></i> Admin Area</h2>
+                <form id="create-slot-form" class="modern-form">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="start-time">Start Time</label>
+                            <input type="datetime-local" id="start-time" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="end-time">End Time</label>
+                            <input type="datetime-local" id="end-time" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Create Slot</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal">
+        <div class="modal-content card">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <h2>Book Appointment</h2>
+                <p>Please enter your details to confirm utilizing this slot.</p>
+            </div>
+            <form id="booking-form" class="modern-form">
+                <input type="hidden" id="booking-slot-id">
+                <div class="input-group">
+                    <label for="name"><i class="fa-solid fa-user"></i> Full Name</label>
+                    <input type="text" id="name" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label for="email"><i class="fa-solid fa-envelope"></i> Email Address</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-block">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

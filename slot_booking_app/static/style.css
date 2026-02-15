@@ -36,19 +36,31 @@ body {
 
 header {
     text-align: center;
+    background-color: #0f172a;
+    /* Dark background */
+    color: white;
+    padding: 80px 20px;
     margin-bottom: 50px;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    box-shadow: var(--shadow-md);
 }
 
 header h1 {
-    font-size: 2.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
     font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 10px;
+    color: white;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
 }
 
 header p {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
+    color: #cbd5e1;
+    /* Light slate text */
+    font-size: 1.2rem;
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* Sections */
@@ -71,14 +83,33 @@ header p {
     margin: 0;
 }
 
-/* Cards Grid */
-.slots-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+/* Carousel */
+.carousel-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.carousel-track-container {
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    display: flex;
     gap: 20px;
+    padding: 20px 5px;
+    /* Padding for shadow */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.carousel-track-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
 }
 
 .slot-card {
+    min-width: 300px;
     background: var(--card-bg);
     border-radius: var(--border-radius);
     padding: 24px;
@@ -87,20 +118,23 @@ header p {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .slot-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
 }
 
 .slot-card.available {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
     border-left: 5px solid var(--success-color);
 }
 
 .slot-card.booked {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     border-left: 5px solid var(--secondary-color);
-    background-color: #f1f5f9;
 }
 
 .slot-card h3 {
@@ -130,7 +164,94 @@ header p {
     color: var(--primary-color);
 }
 
-/* Buttons and Badges */
+/* Glassmorphism Card (Admin) */
+.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    border-radius: 16px;
+    padding: 40px;
+    margin-top: 60px;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.admin-header h2 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.8rem;
+}
+
+/* Form Styles & Input Icons */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 15px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: color 0.3s;
+}
+
+.modern-form .input-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.modern-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.modern-form input {
+    width: 100%;
+    padding: 12px 12px 12px 45px;
+    /* Space for icon */
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    box-sizing: border-box;
+    /* Fix for width overflow */
+}
+
+.modern-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.modern-form input:focus+i,
+.input-wrapper:focus-within i {
+    color: var(--primary-color);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+/* Helper Buttons/Badges */
 .btn {
     display: inline-block;
     padding: 10px 20px;
@@ -139,26 +260,22 @@ header p {
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
     text-align: center;
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
     color: white;
+    padding: 14px 28px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2), 0 2px 4px -1px rgba(37, 99, 235, 0.1);
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-hover);
-}
-
-.btn-success {
-    background-color: var(--success-color);
-    color: white;
-}
-
-.btn-success:hover {
-    background-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3), 0 4px 6px -2px rgba(37, 99, 235, 0.15);
 }
 
 .btn-outline {
@@ -170,10 +287,6 @@ header p {
 
 .btn-outline:hover {
     background-color: #eff6ff;
-}
-
-.btn-block {
-    width: 100%;
 }
 
 .badge {
@@ -199,52 +312,39 @@ header p {
     color: #991b1b;
 }
 
-/* Admin Area */
-.admin-panel {
+/* Navigation Buttons */
+.nav-btn {
     background: white;
-    padding: 30px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    margin-top: 60px;
     border: 1px solid #e2e8f0;
-}
-
-/* Forms */
-.modern-form .input-group {
-    margin-bottom: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s;
+    z-index: 10;
+    color: var(--primary-color);
+    position: absolute;
 }
 
-.modern-form label {
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: var(--text-primary);
-    font-size: 0.9rem;
+.nav-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
 }
 
-.modern-form input {
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
+.nav-btn.prev {
+    left: -20px;
 }
 
-.modern-form input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.nav-btn.next {
+    right: -20px;
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 15px;
-}
-
-/* Modal */
+/* Booking Modal */
 .modal {
     display: none;
     position: fixed;
@@ -254,52 +354,76 @@ header p {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(4px);
+    background-color: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
     animation: fadeIn 0.3s;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Important: Add 'active' class via JS or just set display:flex content handling */
+.modal[style*="display: block"] {
+    display: flex !important;
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 10% auto;
+    background: rgba(255, 255, 255, 0.98);
+    margin: auto;
     padding: 0;
     width: 90%;
-    max-width: 450px;
-    border-radius: 16px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    max-width: 480px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center;
 }
 
 .modal-header {
-    padding: 24px;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 30px 30px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: center;
 }
 
 .modal-header h2 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+    font-family: 'Playfair Display', serif;
 }
 
 .modal-header p {
-    margin: 5px 0 0;
+    margin: 10px 0 0;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 #booking-form {
-    padding: 24px;
+    padding: 30px;
 }
 
 .close {
-    color: #94a3b8;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    width: 32px;
+    height: 32px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 18px;
     cursor: pointer;
-    margin: 15px 20px;
+    transition: all 0.2s;
+    z-index: 10;
 }
 
 .close:hover {
-    color: #334155;
+    background: #e2e8f0;
+    color: var(--danger-color);
+    transform: rotate(90deg);
 }
 
 @keyframes fadeIn {
@@ -312,36 +436,99 @@ header p {
     }
 }
 
-/* Mobile Responsive */
-@media (max-width: 600px) {
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Animations & Mobile */
+@media (max-width: 768px) {
+    .nav-btn {
+        display: none;
+    }
+
+    .carousel-container {
+        width: 100%;
+    }
+
     .form-row {
         grid-template-columns: 1fr;
     }
-
-    .app-container {
-        padding: 20px 15px;
-    }
-
-    header h1 {
-        font-size: 1.8rem;
-    }
 }
 
-/* Pagination */
-.pagination-controls {
+/* Toast Notifications */
+#notification-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 2000;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification {
+    background: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    display: flex;
     align-items: center;
-    gap: 20px;
-    margin-top: 20px;
+    gap: 12px;
+    min-width: 300px;
+    animation: slideIn 0.3s ease-out forwards;
+    border-left: 5px solid;
+    overflow: hidden;
 }
 
-.pagination-controls button {
-    width: auto;
-    padding: 8px 16px;
+.notification.success {
+    border-color: var(--success-color);
 }
 
-.pagination-controls span {
-    font-weight: 600;
-    color: var(--text-secondary);
+.notification.error {
+    border-color: var(--danger-color);
+}
+
+.notification i {
+    font-size: 1.2rem;
+}
+
+.notification.success i {
+    color: var(--success-color);
+}
+
+.notification.error i {
+    color: var(--danger-color);
+}
+
+.notification-content p {
+    margin: 0;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
 }

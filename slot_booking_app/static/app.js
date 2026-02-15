@@ -1,15 +1,14 @@
 const API_URL = "http://localhost:8000";
 
-// Pagination State
+// State: Fetch more items to make carousel look good
 const state = {
-    available: { page: 1, limit: 10 },
-    booked: { page: 1, limit: 10 }
+    available: { page: 1, limit: 50 },
+    booked: { page: 1, limit: 50 }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchSlots();
 
-    // Form Event Listeners (ensure elements exist)
     const createForm = document.getElementById("create-slot-form");
     if (createForm) createForm.addEventListener("submit", handleCreateSlot);
 
@@ -23,7 +22,7 @@ async function handleCreateSlot(e) {
     const endTime = document.getElementById("end-time").value;
 
     if (new Date(startTime) >= new Date(endTime)) {
-        alert("End time must be after start time");
+        showNotification("End time must be after start time", "error");
         return;
     }
 
@@ -35,16 +34,16 @@ async function handleCreateSlot(e) {
         });
 
         if (response.ok) {
-            alert("Slot created successfully");
+            showNotification("Slot created successfully!", "success");
             fetchSlots();
             e.target.reset();
         } else {
             const error = await response.json();
-            alert(`Error: ${error.detail}`);
+            showNotification(`Error: ${error.detail}`, "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Failed to create slot");
+        showNotification("Failed to create slot", "error");
     }
 }
 
@@ -62,17 +61,44 @@ async function handleBooking(e) {
         });
 
         if (response.ok) {
-            alert("Booking confirmed successfully!");
+            showNotification("Booking confirmed successfully!", "success");
             closeModal();
             fetchSlots();
         } else {
             const error = await response.json();
-            alert(`Error: ${error.detail}`);
+            showNotification(`Error: ${error.detail}`, "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Failed to book slot");
+        showNotification("Failed to book slot", "error");
     }
+}
+
+function showNotification(message, type = "success") {
+    const container = document.getElementById("notification-container");
+    if (!container) return;
+
+    const notification = document.createElement("div");
+    notification.classList.add("notification", type);
+
+    const icon = type === "success" ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation"></i>';
+
+    notification.innerHTML = `
+        ${icon}
+        <div class="notification-content">
+            <p>${message}</p>
+        </div>
+    `;
+
+    container.appendChild(notification);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = "slideOut 0.3s ease-in forwards";
+        notification.addEventListener("animationend", () => {
+            notification.remove();
+        });
+    }, 3000);
 }
 
 async function fetchSlots() {
@@ -86,10 +112,6 @@ async function fetchSlotData(type) {
     const isAvailable = type === 'available';
     const containerId = `${type}-slots-container`;
 
-    // Update Page Number Display
-    const pageNumEl = document.getElementById(`${type}-page-num`);
-    if (pageNumEl) pageNumEl.textContent = `Page ${page}`;
-
     const url = `${API_URL}/slots/?available=${isAvailable}&skip=${skip}&limit=${limit}`;
 
     try {
@@ -98,18 +120,9 @@ async function fetchSlotData(type) {
         renderSlots(slots, containerId);
     } catch (err) {
         console.error(`Failed to fetch ${type} slots`, err);
-        document.getElementById(containerId).innerHTML = "<p>Error loading data.</p>";
+        const container = document.getElementById(containerId);
+        if (container) container.innerHTML = "<p>Error loading data.</p>";
     }
-}
-
-function changePage(type, delta) {
-    const currentState = state[type];
-    const newPage = currentState.page + delta;
-
-    if (newPage < 1) return; // Prevent going below page 1
-
-    currentState.page = newPage;
-    fetchSlotData(type);
 }
 
 function renderSlots(slots, containerId) {
@@ -119,7 +132,7 @@ function renderSlots(slots, containerId) {
     container.innerHTML = "";
 
     if (!slots || slots.length === 0) {
-        container.innerHTML = `<div class="empty-state" style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 20px; background: white; border-radius: 8px;">No ${state[containerId.split('-')[0]].page > 1 ? 'more ' : ''}slots found.</div>`;
+        container.innerHTML = `<div class="empty-state" style="width: 100%; text-align: center; color: var(--text-secondary); padding: 20px;">No slots found.</div>`;
         return;
     }
 
@@ -131,16 +144,17 @@ function renderSlots(slots, containerId) {
         const startDate = new Date(slot.start_time);
         const endDate = new Date(slot.end_time);
 
-        const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
-        const timeOptions = { hour: '2-digit', minute: '2-digit' };
+        // Force IST
+        const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'Asia/Kolkata' };
+        const timeOptions = { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' };
 
-        const dateStr = startDate.toLocaleDateString(undefined, dateOptions);
-        const startTimeStr = startDate.toLocaleTimeString(undefined, timeOptions);
-        const endTimeStr = endDate.toLocaleTimeString(undefined, timeOptions);
+        const dateStr = startDate.toLocaleDateString('en-IN', dateOptions);
+        const startTimeStr = startDate.toLocaleTimeString('en-IN', timeOptions);
+        const endTimeStr = endDate.toLocaleTimeString('en-IN', timeOptions);
 
         card.innerHTML = `
             <h3>
-                <span>${slot.is_booked ? "Reserved" : "Open Slot"}</span>
+                <span>${slot.is_booked ? "Reserved" : "Open"}</span>
                 ${slot.is_booked ?
                 '<span class="badge badge-booked">Booked</span>' :
                 '<span class="badge badge-success">Available</span>'
@@ -155,12 +169,24 @@ function renderSlots(slots, containerId) {
             }
             </div>
             ${!slot.is_booked ?
-                `<button class="btn btn-outline" onclick="openBookingModal(${slot.id})">Book This Slot</button>` :
+                `<button class="btn btn-outline" onclick="openBookingModal(${slot.id})">Book Now</button>` :
                 ''
             }
         `;
         container.appendChild(card);
     });
+}
+
+// Carousel Scroll Logic
+function scrollCarousel(type, direction) {
+    const container = document.getElementById(`${type}-slots-container`);
+    if (container) {
+        const scrollAmount = 320; // Card width + gap
+        container.scrollBy({
+            left: direction * scrollAmount,
+            behavior: 'smooth'
+        });
+    }
 }
 
 // Modal Logic

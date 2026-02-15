@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slot Booking App</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -23,14 +25,15 @@
                     <h2><i class="fa-solid fa-check-circle"></i> Available Slots</h2>
                     <span class="badge badge-success">Open</span>
                 </div>
-                <div id="available-slots-container" class="slots-grid">
-                    <!-- Available slots loaded here -->
-                    <div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
-                </div>
-                <div class="pagination-controls">
-                    <button class="btn btn-outline" onclick="changePage('available', -1)">Previous</button>
-                    <span id="available-page-num">Page 1</span>
-                    <button class="btn btn-outline" onclick="changePage('available', 1)">Next</button>
+                <div class="carousel-container">
+                    <button class="nav-btn prev" onclick="scrollCarousel('available', -1)"><i
+                            class="fa-solid fa-chevron-left"></i></button>
+                    <div class="carousel-track-container" id="available-slots-container">
+                        <!-- Available slots loaded here -->
+                        <div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</div>
+                    </div>
+                    <button class="nav-btn next" onclick="scrollCarousel('available', 1)"><i
+                            class="fa-solid fa-chevron-right"></i></button>
                 </div>
             </section>
 
@@ -39,30 +42,40 @@
                     <h2><i class="fa-solid fa-ban"></i> Booked Slots</h2>
                     <span class="badge badge-secondary">Unavailable</span>
                 </div>
-                <div id="booked-slots-container" class="slots-grid">
-                    <!-- Booked slots loaded here -->
-                </div>
-                <div class="pagination-controls">
-                    <button class="btn btn-outline" onclick="changePage('booked', -1)">Previous</button>
-                    <span id="booked-page-num">Page 1</span>
-                    <button class="btn btn-outline" onclick="changePage('booked', 1)">Next</button>
+                <div class="carousel-container">
+                    <button class="nav-btn prev" onclick="scrollCarousel('booked', -1)"><i
+                            class="fa-solid fa-chevron-left"></i></button>
+                    <div class="carousel-track-container" id="booked-slots-container">
+                        <!-- Booked slots loaded here -->
+                    </div>
+                    <button class="nav-btn next" onclick="scrollCarousel('booked', 1)"><i
+                            class="fa-solid fa-chevron-right"></i></button>
                 </div>
             </section>
 
-            <section class="admin-panel">
-                <h2><i class="fa-solid fa-shield-halved"></i> Admin Area</h2>
+            <section class="glass-card">
+                <div class="admin-header">
+                    <h2><i class="fa-solid fa-shield-halved"></i> Admin Area</h2>
+                </div>
                 <form id="create-slot-form" class="modern-form">
                     <div class="form-row">
                         <div class="input-group">
                             <label for="start-time">Start Time</label>
-                            <input type="datetime-local" id="start-time" required>
+                            <div class="input-wrapper">
+                                <i class="fa-regular fa-clock"></i>
+                                <input type="datetime-local" id="start-time" required>
+                            </div>
                         </div>
                         <div class="input-group">
                             <label for="end-time">End Time</label>
-                            <input type="datetime-local" id="end-time" required>
+                            <div class="input-wrapper">
+                                <i class="fa-regular fa-clock"></i>
+                                <input type="datetime-local" id="end-time" required>
+                            </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Create Slot</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Create New
+                        Slot</button>
                 </form>
             </section>
         </main>
@@ -70,26 +83,36 @@
 
     <!-- Booking Modal -->
     <div id="booking-modal" class="modal">
-        <div class="modal-content card">
+        <div class="modal-content">
             <span class="close">&times;</span>
             <div class="modal-header">
                 <h2>Book Appointment</h2>
-                <p>Please enter your details to confirm utilizing this slot.</p>
+                <p>Please enter your details to confirm this slot.</p>
             </div>
             <form id="booking-form" class="modern-form">
                 <input type="hidden" id="booking-slot-id">
                 <div class="input-group">
-                    <label for="name"><i class="fa-solid fa-user"></i> Full Name</label>
-                    <input type="text" id="name" placeholder="John Doe" required>
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
                 </div>
                 <div class="input-group">
-                    <label for="email"><i class="fa-solid fa-envelope"></i> Email Address</label>
-                    <input type="email" id="email" placeholder="john@example.com" required>
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="email" placeholder="john@example.com" required>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-success btn-block">Confirm Booking</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Confirm
+                    Booking</button>
             </form>
         </div>
     </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
 
     <script src="app.js"></script>
 </body>

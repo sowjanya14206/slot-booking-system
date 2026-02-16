@@ -4,6 +4,7 @@ import models
 from database import engine
 from fastapi.middleware.cors import CORSMiddleware
 from routers import slots, bookings
+from slot_booking_app import models, database, schemas
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)

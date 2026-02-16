@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from typing import List
-import schemas
-from database import get_db
-from services import slot_service
+from slot_booking_app import schemas
+from slot_booking_app.database import get_db
+from slot_booking_app.services import slot_service
 
 router = APIRouter(
     prefix="/slots",

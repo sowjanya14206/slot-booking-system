@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
-import models, schemas
+from slot_booking_app import models, schemas
 
 def get_slots(db: Session, skip: int = 0, limit: int = 10, available: bool = None):
     query = db.query(models.Slot)

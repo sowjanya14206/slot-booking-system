@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-import models
-from database import engine
+from pathlib import Path
+from slot_booking_app import models
+from slot_booking_app.database import engine
 from fastapi.middleware.cors import CORSMiddleware
-from routers import slots, bookings
-from slot_booking_app import models, database, schemas
+from slot_booking_app.routers import slots, bookings
 
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
@@ -12,7 +12,8 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Slot Booking API")
 
 # Mount static files
-app.mount("/static", StaticFiles(directory="static"), name="static")
+BASE_DIR = Path(__file__).resolve().parent
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 # CORS
 app.add_middleware(

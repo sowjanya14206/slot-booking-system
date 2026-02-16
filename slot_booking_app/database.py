@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 # URL format: mysql+pymysql://<username>:<password>@<host>/<dbname>
 # Update these credentials as needed
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:sowji@localhost:5432/slot_booking"
+SQLALCHEMY_DATABASE_URL = "postgresql://slot_booking_hza8_user:Hid4Z8yvnwT6o0NUXJHaVxlra3qRxaAd@dpg-d69cqaer433s73cver80-a/slot_booking_hza8"
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
